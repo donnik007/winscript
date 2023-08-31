@@ -1,0 +1,43 @@
+Import-Module activedirectory
+$ADUsers = Import-csv 'C:\Users\defadminuser\Desktop\New folder\dane.csv'
+
+
+foreach ($User in $ADUsers) {
+
+$Firstname = $User.first_name
+$Lastname = $User.last_name
+$OU = "CN=Users,DC=dk,DC=skill39,DC=wse"
+$email = $User.email
+$city = $User.city
+$jobtitle = $User.job
+$company = $User.company
+$department = $User.department
+$domain = $User.domain
+$Password = "P@ssW0rd!"
+
+$groupName = $department
+$sublen = 3
+if ($Lastname.Length -lt 3 ) {$sublen = $Lastname.Length}
+$SAMAccountName = ($Lastname.Substring(0, $sublen) + '.' + $Firstname)
+
+if ($User.domain -eq "dk.skill39.wse") {
+    New-ADUser `
+    -SamAccountName $SAMAccountName `
+    -UserPrincipalName "$Firstname.$Lastname@$domain" `
+    -Name "$Firstname $Lastname" `
+    -GivenName $Firstname `
+    -Surname $Lastname `
+    -Enabled $True `
+    -DisplayName "$Lastname, $Firstname" `
+    -Path $OU `
+    -City $city `
+    -Company $company `
+    -EmailAddress $email `
+    -Title $jobtitle `
+    -Department $department `
+    -AccountPassWord (convertto-securestring $Password -AsPlainText -Force) `
+    -ChangePasswordAtLogon $True
+
+    Add-ADGroupMember -Identity $groupName -Members $SAMAccountName
+}
+}
