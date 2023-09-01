@@ -1,0 +1,63 @@
+# Define the path to the output CSV file
+$OutputFile = "C:\Users\defadminuser\Output\File.csv"
+
+# Get the current date and time
+$CurrentTime = Get-Date
+
+# Define the root domain and child domain (replace with your actual domain names)
+$RootDomain = "skill39.wse"
+$ChildDomainDK = "dk.skill39.wse"
+$ChildDomainPL = "pl.skill39.wse"
+
+# Get users who haven't logged in and their creation time from the root domain
+$RootDomainUsers = Get-ADUser -Filter {Enabled -eq $true -and LastLogonDate -notlike "*"} -Server $RootDomain -Properties SamAccountName, whenCreated
+
+# Get users who haven't logged in and their creation time from the child domain
+$ChildDomainDKUsers = Get-ADUser -Filter {Enabled -eq $true -and LastLogonDate -notlike "*"} -Server $ChildDomainDK -Properties SamAccountName, whenCreated
+
+# Get users who haven't logged in and their creation time from the child domain
+$ChildDomainPLUsers = Get-ADUser -Filter {Enabled -eq $true -and LastLogonDate -notlike "*"} -Server $ChildDomainPL -Properties SamAccountName, whenCreated
+
+
+# Combine users from both domains
+$AllUsers = $RootDomainUsers + $ChildDomainPLUsers + $ChildDomainDKUsers
+
+# Create a CSV file with SamAccountName and user creation time
+$AllUsers | Select-Object SamAccountName, whenCreated | Export-Csv -Path $OutputFile -NoTypeInformation
+
+# Output a message indicating the script ran successfully (optional)
+Write-Host "Script executed successfully."
+
+# Optionally, you can open the CSV file after creating it
+# Start-Process $OutputFile
+
+
+
+
+
+SHEDULER
+Save the script with a .ps1 extension, for example, LogonStatusScript.ps1.
+
+Open Task Scheduler on your Windows Server 2022.
+
+Create a new task by clicking on "Create Basic Task..." or "Create Task..." in the right-hand pane.
+
+Follow the wizard to configure the task with the following settings:
+
+General Tab:
+
+Name: Enter a name for your task.
+Description: (Optional)
+Trigger Tab:
+
+Select "Daily."
+Set "Recur every" to "1 days."
+Check "Repeat task every:" and set it to "2 minutes."
+Action Tab:
+
+Action: Select "Start a program."
+Program/script: Enter powershell.exe.
+Add arguments (optional): -ExecutionPolicy Bypass -File "C:\Path\To\Your\Script\LogonStatusScript.ps1" (replace with the actual path to your script).
+
+
+
