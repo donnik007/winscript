@@ -1,0 +1,54 @@
+ISCSI TARGET
+Na SRV1 i SRV2
+Start-service msiscsi
+Iscsicpl
+I łączymy do targetu
+
+Ustaw automatic z services lub Set-service msiscsi -StartupType automatic
+https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/set-service?view=powershell-7.3
+
+
+
+FAILOVER
+Instalacja Fileover Clustering na SRV1 i SRV2
+Test-cluster na obu
+New-cluster -name DK-CLUSTER -Node cloud-dksrv1 -StaticAddress 10.3.0.15
+Add-clusternode -name cloud-dksrv2
+
+NA CLOUD-DKDC 
+c. Create an SMB based witness disk for Failover Cluster located at \\DK-DC\witness
+
+Mkdir witness
+New-SMBShare -name "Witness" -Path "C:\witness" -FullAcccess "dk.skil39.wse\defaminuser", "DK-CLUSTER$"    (Bez domeny i z $)
+
+
+IPAM
+https://msftwebcast.com/2020/01/install-and-configure-ipam-in-windows-server-2019.html
+
+
+AMDXXX
+PL-Client
+Administratice template -> System -> Logon -> Show first sign-on animation
+
+Administratice template -> Windows Component ->  Data Collection and Preview Builds > Allow Diagnostic Data / Allow Telemetry -> Value	2 Enchanced
+
+Administratice template -> start menu and task bar -> show or hide….
+
+Administrative Templates\Windows Components\Microsoft Edge.
+
+
+
+DK-Client
+
+dministratice template -> System -> Display highly detailed status messenges
+
+Allow IMCO nie wiem?
+
+Remote powershell nie wiem?
+
+
+
+
+AMDX Template 
+https://www.thewindowsclub.com/install-or-update-group-policy-administrative-templates-admx#:~:text=Computer%20Configuration%20%3E%20Administrative%20Templates.%20Add%2FRemove%20Templates%20Go,easily%20import%20GPO%20Administrative%20Template%20files.%20That%E2%80%99s%20it%21
+https://www.youtube.com/watch?v=SpaIuzZVLEk&ab_channel=MSFTWebCast
