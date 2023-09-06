@@ -15,7 +15,7 @@ if ($Aspect -eq "B2" -or $Aspect -eq "B2.M6" -or $Aspect -eq "B2M6" -or !$Aspect
     Start-Marking -Aspect "B2.M6"
 }
 
-#Reverse Stub Zone
+# Reverse Stub Zone
 A reverse DNS stub zone is a type of DNS zone that contains only resource records that identify the DNS servers for the reverse lookup zone. A reverse lookup zone is used to resolve IP addresses to host names. You can create a reverse DNS stub zone using the DNS server role in Windows Server1.
 
 To create a reverse DNS stub zone, you need to follow these steps:
